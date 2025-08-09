@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "capacitaciones-api", "capacitaciones-api.csproj", "{1B6E8721-9504-13EF-CAC6-AABCCFEF7EFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B6E8721-9504-13EF-CAC6-AABCCFEF7EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B6E8721-9504-13EF-CAC6-AABCCFEF7EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B6E8721-9504-13EF-CAC6-AABCCFEF7EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B6E8721-9504-13EF-CAC6-AABCCFEF7EFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {816C93E3-E561-43C4-8211-67DE86B4F418}
+	EndGlobalSection
+EndGlobal
