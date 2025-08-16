@@ -11,10 +11,10 @@ public class CategoriesController(CapacitacionesPruebasContext context) : Contro
 {
     readonly CapacitacionesPruebasContext _context = context;
 
-    [HttpPost(Name = "/")]
+    [HttpPost(Name = "categories/")]
     public async Task<ActionResult> CreateCategory(Categoria category)
     {
-        if (category.Nombre.Trim().Equals("") || category.Nombre is null)
+        if (category.Nombre is null || category.Nombre.Trim().Equals(""))
             return BadRequest();
 
         await _context.Categorias.AddAsync(category);
@@ -23,26 +23,27 @@ public class CategoriesController(CapacitacionesPruebasContext context) : Contro
         return CreatedAtAction(nameof(CategoryById), new { categoryId = category.IdCategoria }, category);
     }
 
-    [HttpGet(Name = "/")]
-    public async Task<ActionResult<List<Categoria>>> Categories() => new(await _context.Categorias.ToListAsync());
+    [HttpGet(Name = "categories/")]
+    public async Task<ActionResult<List<Categoria>>> Categories()
+        => new(await _context.Categorias.ToListAsync());
 
     [HttpGet("{categoryId}", Name = "/{categoryId}")]
     public async Task<ActionResult<Categoria>> CategoryById(int categoryId)
     {
-        Categoria category = await _context.Categorias.FindAsync(categoryId);
+        Categoria? category = await _context.Categorias.FindAsync(categoryId);
 
         return category is null ? NotFound() : category;
     }
 
-    [HttpPut("{categoryId}", Name = "/{categoryId}")]
+    [HttpPut("{categoryId}", Name = "categories/{categoryId}")]
     public async Task<ActionResult> UpdateCategory(int categoryId, Categoria category)
     {
-        Categoria storedCategory = await _context.Categorias.FindAsync(categoryId);
+        Categoria? storedCategory = await _context.Categorias.FindAsync(categoryId);
 
         if (storedCategory is null)
             return NotFound();
 
-        if (category.Nombre.Trim().Equals("") || category.Nombre is null)
+        if (category.Nombre is null || category.Nombre.Trim().Equals(""))
             return BadRequest();
 
         storedCategory.Nombre = category.Nombre;
@@ -54,10 +55,10 @@ public class CategoriesController(CapacitacionesPruebasContext context) : Contro
 
     }
 
-    [HttpDelete("{categoryId}", Name = "/{categoryId}")]
+    [HttpDelete("{categoryId}", Name = "categories/{categoryId}")]
     public async Task<ActionResult> DeleteCategory(int categoryId)
     {
-        Categoria category = await _context.Categorias.FindAsync(categoryId);
+        Categoria? category = await _context.Categorias.FindAsync(categoryId);
 
         if (category is null)
             return NotFound();

@@ -16,3 +16,12 @@ public partial class Categoria
     public virtual ICollection<Curso> Cursos { get; set; } = [];
 
 }
+
+public class CategoriaDto
+{
+    [JsonPropertyName("categoryId")]
+    public int IdCategoria { get; set; }
+
+    [JsonPropertyName("categoryName")]
+    public string? Nombre { get; set; }
+}
