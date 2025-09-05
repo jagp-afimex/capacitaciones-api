@@ -39,7 +39,13 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
             Nombre = section.Nombre,
             Orden = section.Orden,
             IdCurso = section.IdCurso,
-            Videos = section.Videos
+            Videos = [.. section.Videos.Select(v => new VideoDto{
+                IdVideo = v.IdVideo,
+                Nombre = v.Nombre,
+                IdSeccion = v.IdSeccion,
+                Referencia = v.Referencia,
+                Duracion = v.Duracion
+            })]
         };
 
         return CreatedAtAction(nameof(SectionById), new { sectionId = section.IdSeccion }, newSection);
@@ -48,7 +54,9 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
     [HttpGet(Name = "sections/")]
     public async Task<IEnumerable<SeccionDto>> Sections()
     {
-        List<Seccion> sections = await _context.Secciones.ToListAsync();
+        List<Seccion> sections = await _context.Secciones
+            .Include(s => s.Videos)
+            .ToListAsync();
 
         return from section in sections
                select new SeccionDto
@@ -57,14 +65,23 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
                    Nombre = section.Nombre,
                    Orden = section.Orden,
                    IdCurso = section.IdCurso,
-                   Videos = section.Videos
+                   Videos = [.. section.Videos.Select(v => new VideoDto{
+                        IdVideo = v.IdVideo,
+                        Nombre = v.Nombre,
+                        IdSeccion = v.IdSeccion,
+                        Referencia = v.Referencia,
+                        Duracion = v.Duracion
+                    })]
                };
     }
 
     [HttpGet("{sectionId}", Name = "sections/{sectionId}")]
     public async Task<ActionResult<SeccionDto>> SectionById(int sectionId)
     {
-        Seccion? section = await _context.Secciones.FindAsync(sectionId);
+        Seccion? section = await _context.Secciones
+            .Include(s => s.Videos)
+            .Where(s => s.IdSeccion == sectionId)
+            .FirstOrDefaultAsync();
 
         if (section is null)
             return NotFound();
@@ -75,7 +92,13 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
             Nombre = section.Nombre,
             Orden = section.Orden,
             IdCurso = section.IdCurso,
-            Videos = section.Videos
+            Videos = [.. section.Videos.Select(v => new VideoDto{
+                IdVideo = v.IdVideo,
+                Nombre = v.Nombre,
+                IdSeccion = v.IdSeccion,
+                Referencia = v.Referencia,
+                Duracion = v.Duracion
+            })]
         };
     }
 
@@ -109,7 +132,13 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
             Nombre = storedSection.Nombre,
             Orden = storedSection.Orden,
             IdCurso = storedSection.IdCurso,
-            Videos = storedSection.Videos
+            Videos = [.. section.Videos.Select(v => new VideoDto{
+                IdVideo = v.IdVideo,
+                Nombre = v.Nombre,
+                IdSeccion = v.IdSeccion,
+                Referencia = v.Referencia,
+                Duracion = v.Duracion
+            })]
         };
 
         return CreatedAtAction(nameof(SectionById), new { sectionId = storedSection.IdSeccion }, updatedSection);

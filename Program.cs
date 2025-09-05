@@ -12,6 +12,10 @@ builder.Services.AddDbContext<CapacitacionesPruebasContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CapacitacionesPruebas"))
 );
 
+builder.Services.AddScoped<InscripcionRepository>();
+builder.Services.AddScoped<PuestoRepository>();
+builder.Services.AddScoped<EmpleadoRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

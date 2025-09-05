@@ -2,6 +2,7 @@ using System.Data;
 using System.Data.Common;
 using System.Text.Json.Serialization;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace capacitaciones_api.Models;
@@ -13,16 +14,20 @@ public class Puesto()
     [JsonPropertyName("positionName")]
     public string? Nombre { get; set; }
 
-    private readonly CapacitacionesPruebasContext _context;
+}
 
-    public Puesto(CapacitacionesPruebasContext context) : this()
+public class PuestoRepository
+{
+    private readonly string _connectionString;
+
+    public PuestoRepository(IConfiguration configuration)
     {
-        _context = context;
+        _connectionString = configuration.GetConnectionString("CapacitacionesPruebas");
     }
 
     public async Task<List<Puesto>> Positions()
     {
-        using DbConnection connection = _context.Database.GetDbConnection();
+        using DbConnection connection = new SqlConnection(_connectionString);
 
         if (connection.State == ConnectionState.Open)
             connection.Open();
@@ -33,7 +38,7 @@ public class Puesto()
 
     public async Task<Puesto> PositionById(int? positionId)
     {
-        using DbConnection connection = _context.Database.GetDbConnection();
+        using DbConnection connection = new SqlConnection(_connectionString);
 
         if (connection.State == ConnectionState.Open)
             connection.Open();

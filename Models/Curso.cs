@@ -34,6 +34,9 @@ public partial class Curso
 
     [JsonPropertyName("sections")]
     public virtual ICollection<Seccion> Secciones { get; set; } = new List<Seccion>();
+
+    [JsonPropertyName("courseDescription")]
+    public string? Descripcion { get; set; }
 }
 
 public class CursoDto
@@ -43,6 +46,9 @@ public class CursoDto
 
     [JsonPropertyName("courseName")]
     public string? Nombre { get; set; }
+    
+    [JsonPropertyName("courseDescription")]
+    public string? Descripcion { get; set; }
 
     [JsonPropertyName("version")]
     public int? Version { get; set; }
@@ -61,4 +67,7 @@ public class CursoDto
 
     [JsonPropertyName("sections")]
     public ICollection<SeccionDto> Secciones { get; set; } = [];
+
+    [JsonPropertyName("enrollments")]
+    public ICollection<InscripcionDto> Inscripciones { get; set; } = [];
 }

@@ -7,7 +7,7 @@ namespace capacitaciones_api.Controllers;
 
 [ApiController]
 [Route("answers")]
-public class QuestionAnswers(CapacitacionesPruebasContext context) : ControllerBase
+public class QuestionAnswersController(CapacitacionesPruebasContext context) : ControllerBase
 {
     readonly CapacitacionesPruebasContext _context = context;
 

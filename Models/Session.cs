@@ -20,7 +20,7 @@ public class Session()
         _context = context;
     }
 
-    public async Task<Usuario> Informacion(Session session)
+    public async Task<Usuario?> Informacion(Session session)
     {
         using DbConnection connection = _context.Database.GetDbConnection();
 
@@ -30,6 +30,6 @@ public class Session()
         DynamicParameters parameters = new();
         parameters.Add("@Usuario", session.Usuario);
         parameters.Add("@Contrasena", session.Contrasena);
-        return await connection.QueryFirstAsync<Usuario>("SesionUsuario", parameters, commandTimeout: 120, commandType: CommandType.StoredProcedure);
+        return await connection.QueryFirstOrDefaultAsync<Usuario>("SesionUsuario", parameters, commandTimeout: 120, commandType: CommandType.StoredProcedure);
     }
 }

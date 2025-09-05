@@ -9,10 +9,18 @@ public class UsersController(CapacitacionesPruebasContext context) : ControllerB
 {
     readonly CapacitacionesPruebasContext _context = context;
 
-    [HttpPost(Name = "users/")]
+    [Route("login/")]
+    [HttpPost]
     public async Task<ActionResult<Usuario>> Session(Session session)
     {
         Session session1 = new(_context);
-        return await session1.Informacion(session);
+        Usuario? user = await session1.Informacion(session);
+
+        if (user is null)
+            return NotFound();
+
+        user.Token = "sdlkñsdkfsdñfjsdi565";
+        user.IdTipoUsuario = 3;
+        return user;
     }
 }

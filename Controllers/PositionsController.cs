@@ -5,23 +5,21 @@ namespace capacitaciones_api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PositionsController(CapacitacionesPruebasContext context) : ControllerBase
+public class PositionsController(PuestoRepository puestoRepository) : ControllerBase
 {
-    readonly CapacitacionesPruebasContext _context = context;
+    readonly PuestoRepository _puestoRepository = puestoRepository;
 
     [HttpGet(Name = "positions/")]
     public async Task<List<Puesto>> Positions()
     {
-        Puesto position = new(_context);
-        List<Puesto> positions = await position.Positions();
+        List<Puesto> positions = await _puestoRepository.Positions();
         return positions;
     }
 
     [HttpGet("{positionId}", Name = "positions/{positionId}")]
     public async Task<ActionResult<Puesto>> PositionBy(int positionId)
     {
-        Puesto? position = new(_context);
-        position = await position.PositionById(positionId);
+        Puesto position = await _puestoRepository.PositionById(positionId);
         return position is null ? NotFound() : position;
     }
 }

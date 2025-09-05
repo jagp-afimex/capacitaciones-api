@@ -16,7 +16,10 @@ public class Usuario
     public string? Puesto { get; set; }
     [JsonPropertyName("picture")]
     public string? Foto { get; set; }
-
+    [JsonPropertyName("token")]
+    public string? Token { get; set; }
+    [JsonPropertyName("userTypeId")]
+    public int IdTipoUsuario { get; set; }
     
 }
 

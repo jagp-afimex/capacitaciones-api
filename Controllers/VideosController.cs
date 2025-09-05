@@ -13,7 +13,7 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
     readonly CapacitacionesPruebasContext _context = context;
 
     [HttpPost(Name = "videos/")]
-    public async Task<ActionResult> CreateState(Video video)
+    public async Task<ActionResult> CreateVideo(Video video)
     {
         Seccion? section = await _context.Secciones.FindAsync(video.IdSeccion);
 

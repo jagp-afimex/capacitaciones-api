@@ -43,5 +43,5 @@ public class SeccionDto
     public int? IdCurso { get; set; }
 
     [JsonPropertyName("videos")]
-    public virtual ICollection<Video> Videos { get; set; } = [];
+    public virtual ICollection<VideoDto> Videos { get; set; } = [];
 }
