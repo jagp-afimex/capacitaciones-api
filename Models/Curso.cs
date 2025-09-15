@@ -37,6 +37,8 @@ public partial class Curso
 
     [JsonPropertyName("courseDescription")]
     public string? Descripcion { get; set; }
+    
+    public bool? Archivado { get; set; }
 }
 
 public class CursoDto
@@ -46,7 +48,7 @@ public class CursoDto
 
     [JsonPropertyName("courseName")]
     public string? Nombre { get; set; }
-    
+
     [JsonPropertyName("courseDescription")]
     public string? Descripcion { get; set; }
 
@@ -70,4 +72,11 @@ public class CursoDto
 
     [JsonPropertyName("enrollments")]
     public ICollection<InscripcionDto> Inscripciones { get; set; } = [];
+
+    [JsonPropertyName("coursePositions")]
+    public virtual ICollection<PuestosCursoDto> PuestosCursos { get; set; } = new List<PuestosCursoDto>();
+
+    [JsonPropertyName("isArchived")]    
+    public bool? Archivado { get; set; }
+
 }

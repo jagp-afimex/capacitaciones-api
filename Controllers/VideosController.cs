@@ -26,8 +26,11 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
         if (video.Referencia is null || video.Referencia.Trim().Equals(""))
             return BadRequest();
 
+        if (video.Orden == 0)
+            return BadRequest();
+
         // sacarlo programaticamente
-        video.Duracion = 10;
+        video.Duracion = 0;
         video.IdSeccionNavigation = section;
 
         await _context.Videos.AddAsync(video);
@@ -101,7 +104,7 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
 
         storedVideo.Nombre = video.Nombre;
         storedVideo.Referencia = video.Referencia;
-        storedVideo.Duracion = 60; // sacar programaticamente
+        storedVideo.Duracion = 0; // sacar programaticamente
 
         _context.Videos.Update(storedVideo);
         await _context.SaveChangesAsync();

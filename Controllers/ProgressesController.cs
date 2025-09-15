@@ -74,19 +74,23 @@ public class ProgressesController(CapacitacionesPruebasContext context) : Contro
     [HttpGet(Name = "{controller}/")]
     public async Task<IEnumerable<AvancesCursoDto>> Progresses()
     {
-        List<AvancesCurso> progresses = await _context.AvancesCursos.ToListAsync();
+        List<AvancesCurso> progresses = await _context.AvancesCursos
+            .Include(a => a.IdVideoNavigation)
+            .ToListAsync();
+        // List<AvancesCurso> progresses = await _context.AvancesCursos.ToListAsync();
 
         return from progress in progresses
                select new AvancesCursoDto
                {
-                    IdAvance = progress.IdAvance,
-                    IdCurso = progress.IdCurso,
-                    IdSeccion = progress.IdSeccion,
-                    IdVideo = progress.IdVideo,
-                    IdEstado = progress.IdEstado,
-                    Fecha = progress.Fecha,
-                    VersionCurso = progress.VersionCurso,
-                    KEmpleado = progress.KEmpleado
+                   IdAvance = progress.IdAvance,
+                   IdCurso = progress.IdCurso,
+                   IdSeccion = progress.IdSeccion,
+                   IdVideo = progress.IdVideo,
+                   IdEstado = progress.IdEstado,
+                   Fecha = progress.Fecha,
+                   VersionCurso = progress.VersionCurso,
+                   KEmpleado = progress.KEmpleado,
+                   Orden = progress.IdVideoNavigation.Orden
                };
 
     }

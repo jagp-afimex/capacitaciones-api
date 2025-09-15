@@ -63,7 +63,18 @@ public class CoursesController : ControllerBase
                 Nombre = s.Nombre,
                 Orden = s.Orden,
                 IdCurso = s.IdCurso,
-                // Videos = s.Videos
+                Videos = [.. s.Videos.Select(v => new VideoDto{
+                        IdVideo = v.IdVideo,
+                        Nombre = v.Nombre,
+                        IdSeccion = v.IdSeccion,
+                        Referencia = v.Referencia,
+                        Duracion = v.Duracion
+                    }) ]
+            })],
+            PuestosCursos = [..course.PuestosCursos.Select(p => new PuestosCursoDto{
+                IdPuestoCurso = p.IdPuestoCurso,
+                KPuesto = p.KPuesto,
+                IdCurso = p.IdCurso
             })]
         };
 
@@ -75,6 +86,7 @@ public class CoursesController : ControllerBase
     {
         List<Curso> storedCourses = await _context.Cursos
             .Include(c => c.IdCategoriaNavigation)
+            .Include(c => c.PuestosCursos)
             .Include(c => c.Secciones)
                 .ThenInclude(seccion => seccion.Videos)
             .ToListAsync();
@@ -114,6 +126,11 @@ public class CoursesController : ControllerBase
                     }) ]
                 })],
                 Inscripciones = registrations,
+                PuestosCursos = [..course.PuestosCursos.Select(p => new PuestosCursoDto{
+                    IdPuestoCurso = p.IdPuestoCurso,
+                    KPuesto = p.KPuesto,
+                    IdCurso = p.IdCurso
+                })]
             });
         }
 
@@ -125,6 +142,7 @@ public class CoursesController : ControllerBase
     {
         Curso? course = await _context.Cursos
             .Include(c => c.IdCategoriaNavigation)
+            .Include(c => c.PuestosCursos)
             .Include(c => c.Secciones)
                 .ThenInclude(seccion => seccion.Videos)
             .Where(c => c.IdCurso == courseId).FirstOrDefaultAsync();
@@ -162,7 +180,12 @@ public class CoursesController : ControllerBase
                     Duracion = v.Duracion
                 })]
             })],
-            Inscripciones = registrations
+            Inscripciones = registrations,
+            PuestosCursos = [..course.PuestosCursos.Select(p => new PuestosCursoDto{
+                IdPuestoCurso = p.IdPuestoCurso,
+                KPuesto = p.KPuesto,
+                IdCurso = p.IdCurso
+            })]
 
         };
     }
@@ -205,6 +228,11 @@ public class CoursesController : ControllerBase
                     Referencia = v.Referencia,
                     Duracion = v.Duracion
                 })]
+            })],
+            PuestosCursos = [..course.PuestosCursos.Select(p => new PuestosCursoDto{
+                IdPuestoCurso = p.IdPuestoCurso,
+                KPuesto = p.KPuesto,
+                IdCurso = p.IdCurso
             })]
         })];
     }
@@ -224,6 +252,36 @@ public class CoursesController : ControllerBase
             return NotFound();
 
         course.AvancesCursos = [.. course.AvancesCursos.Where(a => a.IdCurso == courseId && a.KEmpleado == employeeId)];
+
+        return new CursoDto
+        {
+            IdCurso = course.IdCurso,
+            Nombre = course.Nombre,
+            Descripcion = course.Descripcion,
+            Version = course.Version,
+            FechaModificacion = course.FechaModificacion,
+            IdCategoria = course.IdCategoria,
+            PortadaReferencia = course.PortadaReferencia,
+            Categoria = new CategoriaDto
+            {
+                IdCategoria = course.IdCategoriaNavigation.IdCategoria,
+                Nombre = course.IdCategoriaNavigation.Nombre
+            },
+            Secciones = [.. course.Secciones.Select(s => new SeccionDto
+            {
+                IdSeccion = s.IdSeccion,
+                Nombre = s.Nombre,
+                Orden = s.Orden,
+                IdCurso = s.IdCurso,
+                Videos = [.. s.Videos.Select(v => new VideoDto{
+                    IdVideo = v.IdVideo,
+                    Nombre = v.Nombre,
+                    IdSeccion = v.IdSeccion,
+                    Referencia = v.Referencia,
+                    Duracion = v.Duracion
+                })]
+            })]
+        };
 
     }
     

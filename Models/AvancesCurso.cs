@@ -53,6 +53,9 @@ public class AvancesCursoDto
     [JsonPropertyName("videoId")]
     public int? IdVideo { get; set; }
 
+    [JsonPropertyName("order")]
+    public int? Orden { get; set; }
+
     [JsonPropertyName("employeeId")]
     public int? KEmpleado { get; set; }
 

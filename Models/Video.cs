@@ -23,6 +23,8 @@ public partial class Video
     public virtual ICollection<AvancesCurso> AvancesCursos { get; set; } = new List<AvancesCurso>();
 
     public virtual Seccion? IdSeccionNavigation { get; set; }
+
+    public int? Orden { get; set; }
 }
 
 public class VideoDto
@@ -41,4 +43,7 @@ public class VideoDto
 
     [JsonPropertyName("duration")]
     public int? Duracion { get; set; }
+
+    [JsonPropertyName("order")]
+    public int? Orden { get; set; }
 }

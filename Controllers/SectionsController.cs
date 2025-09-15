@@ -27,7 +27,6 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
         if (section.Nombre is null || section.Nombre.Trim().Equals(""))
             return BadRequest();
 
-        section.Orden = 1;
         section.IdCursoNavigation = course;
 
         await _context.Secciones.AddAsync(section);
