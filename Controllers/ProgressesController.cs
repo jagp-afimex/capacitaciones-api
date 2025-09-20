@@ -21,6 +21,8 @@ public class ProgressesController(CapacitacionesPruebasContext context) : Contro
     [HttpPost(Name = "{controller}/")]
     public async Task<ActionResult> CreateProgress(AvancesCurso progress)
     {
+        List<AvancesCurso> progresses = await _context.AvancesCursos.ToListAsync();
+
         if (progress.KEmpleado <= 0)
             return BadRequest();
 
@@ -51,6 +53,28 @@ public class ProgressesController(CapacitacionesPruebasContext context) : Contro
         progress.IdVideoNavigation = video;
         progress.IdEstadoNavigation = state;
         progress.IdSeccionNavigation = section;
+
+        AvancesCurso? storedProgress = progresses
+        .FirstOrDefault(p => p.IdCurso == progress.IdCurso && p.IdSeccion == progress.IdSeccion
+        && p.IdVideo == progress.IdVideo && p.KEmpleado == progress.KEmpleado && p.VersionCurso == course.Version);
+
+        if (storedProgress is not null)
+        {
+            AvancesCursoDto storedProgressDto = new()
+            {
+                IdAvance = storedProgress.IdAvance,
+                IdCurso = storedProgress.IdCurso,
+                IdSeccion = storedProgress.IdSeccion,
+                IdVideo = storedProgress.IdVideo,
+                IdEstado = storedProgress.IdEstado,
+                Fecha = storedProgress.Fecha,
+                VersionCurso = storedProgress.VersionCurso,
+                KEmpleado = storedProgress.KEmpleado
+            };
+
+            return CreatedAtAction(nameof(ProgressById), new { progressId = progress.IdAvance }, storedProgressDto);
+        }
+
 
         await _context.AvancesCursos.AddAsync(progress);
         await _context.SaveChangesAsync();

@@ -42,7 +42,8 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
             Nombre = video.Nombre,
             IdSeccion = video.IdSeccion,
             Referencia = video.Referencia,
-            Duracion = video.Duracion
+            Duracion = video.Duracion,
+            Orden = video.Orden
         };
 
         return CreatedAtAction(nameof(VideoById), new { videoId = video.IdVideo }, newVideo);
@@ -60,7 +61,8 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
                    Nombre = video.Nombre,
                    IdSeccion = video.IdSeccion,
                    Referencia = video.Referencia,
-                   Duracion = video.Duracion
+                   Duracion = video.Duracion,
+                   Orden = video.Orden
                };
 
     }
@@ -79,7 +81,8 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
             Nombre = video.Nombre,
             IdSeccion = video.IdSeccion,
             Referencia = video.Referencia,
-            Duracion = video.Duracion
+            Duracion = video.Duracion,
+            Orden = video.Orden
         };
     }
 
@@ -102,20 +105,25 @@ public class VideosController(CapacitacionesPruebasContext context) : Controller
         if (video.Referencia is null || video.Referencia.Trim().Equals(""))
             return BadRequest();
 
+        if (video.Orden == 0)
+            return BadRequest();
+
         storedVideo.Nombre = video.Nombre;
         storedVideo.Referencia = video.Referencia;
         storedVideo.Duracion = 0; // sacar programaticamente
+        storedVideo.Orden = video.Orden;
 
         _context.Videos.Update(storedVideo);
         await _context.SaveChangesAsync();
 
         VideoDto updatedVideo = new()
-        { 
+        {
             IdVideo = video.IdVideo,
             Nombre = video.Nombre,
             IdSeccion = video.IdSeccion,
             Referencia = video.Referencia,
-            Duracion = video.Duracion
+            Duracion = video.Duracion,
+            Orden = video.Orden
         };
 
         return CreatedAtAction(nameof(VideoById), new { videoId = storedVideo.IdVideo }, updatedVideo);

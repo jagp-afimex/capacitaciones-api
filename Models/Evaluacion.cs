@@ -27,5 +27,11 @@ public class EvaluacionDto
     public int? IdSeccion { get; set; }
 
     [JsonPropertyName("questions")]
-    public virtual ICollection<Pregunta> Pregunta { get; set; } = [];
+    public virtual ICollection<PreguntaDto> Pregunta { get; set; } = [];
+
+    [JsonPropertyName("section")]
+    public virtual SeccionDto? Seccion { get; set; }
+
+    // [JsonPropertyName("course")]
+    // public virtual CursoDto? Curso { get; set; }
 }

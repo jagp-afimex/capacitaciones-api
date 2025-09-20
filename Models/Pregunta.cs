@@ -42,6 +42,12 @@ public class PreguntaDto
 
     [JsonPropertyName("evaluationId")]
     public int? IdEvaluacion { get; set; }
+
+    [JsonPropertyName("options")]
+    public virtual ICollection<OpcionesPreguntaDto> OpcionesPregunta { get; set; } = [];
+
+    [JsonPropertyName("answers")]
+    public virtual ICollection<RespuestasPreguntaDto> RespuestasPregunta { get; set; } = [];
 }
 
 public class PreguntaAbiertaDto : PreguntaDto

@@ -44,4 +44,8 @@ public class SeccionDto
 
     [JsonPropertyName("videos")]
     public virtual ICollection<VideoDto> Videos { get; set; } = [];
+
+    [JsonPropertyName("evaluations")]
+    public virtual ICollection<EvaluacionDto> Evaluaciones { get; set; } = [];
+
 }

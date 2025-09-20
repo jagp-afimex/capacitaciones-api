@@ -42,20 +42,65 @@ public class EvaluationsController(CapacitacionesPruebasContext context) : Contr
     [HttpGet(Name = "evaluations/")]
     public async Task<IEnumerable<EvaluacionDto>> Evaluations()
     {
-        List<Evaluacion> evaluations = await _context.Evaluaciones.ToListAsync();
+        List<Evaluacion> evaluations = await _context.Evaluaciones
+        .Include(e => e.IdSeccionNavigation)
+        //     .ThenInclude(seccion => seccion.IdCursoNavigation)
+        .Include(e => e.Pregunta)
+            .ThenInclude(opcion => opcion.OpcionesPregunta)
+        .Include(e => e.Pregunta)
+            .ThenInclude(respuesta => respuesta.RespuestasPregunta)    
+        .ToListAsync();
 
         return from evaluation in evaluations
                select new EvaluacionDto
                {
                    IdEvaluacion = evaluation.IdEvaluacion,
-                   IdSeccion = evaluation.IdSeccion
+                   IdSeccion = evaluation.IdSeccion,
+                   Pregunta = [.. evaluation.Pregunta.Select(p => new PreguntaDto
+                   {
+                        IdPregunta = p.IdPregunta,
+                        TextoPregunta = p.TextoPregunta,
+                        IdTipoPregunta = p.IdTipoPregunta,
+                        IdEvaluacion = p.IdEvaluacion,
+                        OpcionesPregunta = [.. p.OpcionesPregunta.Select(o => new OpcionesPreguntaDto{
+                            IdOpcion = o.IdOpcion,
+                            Opcion = o.Opcion,
+                            EsRespuesta = o.EsRespuesta,
+                            IdPregunta = o.IdPregunta
+                        })],
+                        RespuestasPregunta = [.. p.RespuestasPregunta.Select(r => new RespuestasPreguntaDto{
+                            IdRespuesta = r.IdRespuesta,
+                            Respuesta = r.Respuesta,
+                            KEmpleado = r.KEmpleado,
+                            IdPregunta = r.IdPregunta
+                        })]
+                   })],
+                   Seccion = new SeccionDto
+                   {
+                        IdSeccion = evaluation.IdSeccionNavigation.IdSeccion,
+                        Nombre = evaluation.IdSeccionNavigation.Nombre
+                   },
+                //    Curso = new CursoDto
+                //    {
+                //         IdCurso = evaluation.IdSeccionNavigation.IdCursoNavigation.IdCurso,
+                //         Nombre = evaluation.IdSeccionNavigation.IdCursoNavigation.Nombre,
+                //         Descripcion = evaluation.IdSeccionNavigation.IdCursoNavigation.Descripcion
+                //    }
                };
     }
 
     [HttpGet("{evaluationId}", Name = "evaluations/{evaluationId}")]
     public async Task<ActionResult<EvaluacionDto>> EvaluationById(int evaluationId)
     {
-        Evaluacion? evaluation = await _context.Evaluaciones.FindAsync(evaluationId);
+        Evaluacion? evaluation = await _context.Evaluaciones
+        .Include(e => e.IdSeccionNavigation)
+        //     .ThenInclude(seccion => seccion.IdCursoNavigation)
+        .Include(e => e.Pregunta)
+            .ThenInclude(opcion => opcion.OpcionesPregunta)
+        .Include(e => e.Pregunta)
+            .ThenInclude(respuesta => respuesta.RespuestasPregunta)
+        .Where(e => e.IdEvaluacion == evaluationId)
+        .FirstOrDefaultAsync();
 
         if (evaluation is null)
             return NotFound();
@@ -63,7 +108,31 @@ public class EvaluationsController(CapacitacionesPruebasContext context) : Contr
         return new EvaluacionDto
         {
             IdEvaluacion = evaluation.IdEvaluacion,
-            IdSeccion = evaluation.IdSeccion
+            IdSeccion = evaluation.IdSeccion,
+            Pregunta = [.. evaluation.Pregunta.Select(p => new PreguntaDto
+            {
+                IdPregunta = p.IdPregunta,
+                TextoPregunta = p.TextoPregunta,
+                IdTipoPregunta = p.IdTipoPregunta,
+                IdEvaluacion = p.IdEvaluacion,
+                OpcionesPregunta = [.. p.OpcionesPregunta.Select(o => new OpcionesPreguntaDto{
+                    IdOpcion = o.IdOpcion,
+                    Opcion = o.Opcion,
+                    EsRespuesta = o.EsRespuesta,
+                    IdPregunta = o.IdPregunta
+                })],
+                RespuestasPregunta = [.. p.RespuestasPregunta.Select(r => new RespuestasPreguntaDto{
+                    IdRespuesta = r.IdRespuesta,
+                    Respuesta = r.Respuesta,
+                    KEmpleado = r.KEmpleado,
+                    IdPregunta = r.IdPregunta
+                })]
+            })],
+            Seccion = new SeccionDto
+            {
+                IdSeccion = evaluation.IdSeccionNavigation.IdSeccion,
+                Nombre = evaluation.IdSeccionNavigation.Nombre
+            },
         };
     }
 

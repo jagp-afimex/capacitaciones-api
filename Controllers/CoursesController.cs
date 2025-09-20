@@ -89,6 +89,10 @@ public class CoursesController : ControllerBase
             .Include(c => c.PuestosCursos)
             .Include(c => c.Secciones)
                 .ThenInclude(seccion => seccion.Videos)
+            .Include(c => c.Secciones)
+                .ThenInclude(seccion => seccion.Evaluaciones)
+                .ThenInclude(evaluacion => evaluacion.Pregunta)
+                .ThenInclude(pregunta => pregunta.OpcionesPregunta)
             .ToListAsync();
 
         List<CursoDto> coursesDto = [];
@@ -122,8 +126,25 @@ public class CoursesController : ControllerBase
                         Nombre = v.Nombre,
                         IdSeccion = v.IdSeccion,
                         Referencia = v.Referencia,
-                        Duracion = v.Duracion
-                    }) ]
+                        Duracion = v.Duracion,
+                        Orden = v.Orden
+                    }) ],
+                    Evaluaciones = [.. s.Evaluaciones.Select(e => new EvaluacionDto{
+                        IdEvaluacion = e.IdEvaluacion,
+                        IdSeccion = e.IdSeccion,
+                        Pregunta = [.. e.Pregunta.Select(p => new PreguntaDto{
+                            IdPregunta = p.IdPregunta,
+                            TextoPregunta = p.TextoPregunta,
+                            IdTipoPregunta = p.IdTipoPregunta,
+                            IdEvaluacion = p.IdEvaluacion,
+                            OpcionesPregunta = [.. p.OpcionesPregunta.Select(op => new OpcionesPreguntaDto{
+                                IdOpcion = op.IdOpcion,
+                                Opcion = op.Opcion,
+                                EsRespuesta = op.EsRespuesta,
+                                IdPregunta = op.IdPregunta
+                            })],
+                        })]
+                    })]
                 })],
                 Inscripciones = registrations,
                 PuestosCursos = [..course.PuestosCursos.Select(p => new PuestosCursoDto{
@@ -145,6 +166,10 @@ public class CoursesController : ControllerBase
             .Include(c => c.PuestosCursos)
             .Include(c => c.Secciones)
                 .ThenInclude(seccion => seccion.Videos)
+            .Include(c => c.Secciones)
+                .ThenInclude(seccion => seccion.Evaluaciones)
+                .ThenInclude(evaluacion => evaluacion.Pregunta)
+                .ThenInclude(pregunta => pregunta.OpcionesPregunta)
             .Where(c => c.IdCurso == courseId).FirstOrDefaultAsync();
 
         if (course is null)
@@ -177,7 +202,24 @@ public class CoursesController : ControllerBase
                     Nombre = v.Nombre,
                     IdSeccion = v.IdSeccion,
                     Referencia = v.Referencia,
-                    Duracion = v.Duracion
+                    Duracion = v.Duracion,
+                    Orden = v.Orden
+                })],
+                Evaluaciones = [.. s.Evaluaciones.Select(e => new EvaluacionDto{
+                    IdEvaluacion = e.IdEvaluacion,
+                    IdSeccion = e.IdSeccion,
+                    Pregunta = [.. e.Pregunta.Select(p => new PreguntaDto{
+                        IdPregunta = p.IdPregunta,
+                        TextoPregunta = p.TextoPregunta,
+                        IdTipoPregunta = p.IdTipoPregunta,
+                        IdEvaluacion = p.IdEvaluacion,
+                        OpcionesPregunta = [.. p.OpcionesPregunta.Select(op => new OpcionesPreguntaDto{
+                            IdOpcion = op.IdOpcion,
+                            Opcion = op.Opcion,
+                            EsRespuesta = op.EsRespuesta,
+                            IdPregunta = op.IdPregunta
+                        })],
+                    })]
                 })]
             })],
             Inscripciones = registrations,
@@ -226,7 +268,8 @@ public class CoursesController : ControllerBase
                     Nombre = v.Nombre,
                     IdSeccion = v.IdSeccion,
                     Referencia = v.Referencia,
-                    Duracion = v.Duracion
+                    Duracion = v.Duracion,
+                    Orden = v.Orden
                 })]
             })],
             PuestosCursos = [..course.PuestosCursos.Select(p => new PuestosCursoDto{
@@ -278,7 +321,8 @@ public class CoursesController : ControllerBase
                     Nombre = v.Nombre,
                     IdSeccion = v.IdSeccion,
                     Referencia = v.Referencia,
-                    Duracion = v.Duracion
+                    Duracion = v.Duracion,
+                    Orden = v.Orden
                 })]
             })]
         };

@@ -43,7 +43,8 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
                 Nombre = v.Nombre,
                 IdSeccion = v.IdSeccion,
                 Referencia = v.Referencia,
-                Duracion = v.Duracion
+                Duracion = v.Duracion,
+                Orden = v.Orden
             })]
         };
 
@@ -55,6 +56,8 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
     {
         List<Seccion> sections = await _context.Secciones
             .Include(s => s.Videos)
+            .Include(s => s.Evaluaciones)
+                .ThenInclude(evaluacion => evaluacion.Pregunta)
             .ToListAsync();
 
         return from section in sections
@@ -69,7 +72,15 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
                         Nombre = v.Nombre,
                         IdSeccion = v.IdSeccion,
                         Referencia = v.Referencia,
-                        Duracion = v.Duracion
+                        Duracion = v.Duracion,
+                        Orden = v.Orden
+                    })],
+                    Evaluaciones = [.. section.Evaluaciones.Select(e => new EvaluacionDto{
+                        IdEvaluacion = e.IdEvaluacion,
+                        IdSeccion = e.IdSeccion,
+                        Pregunta = [.. e.Pregunta.Select(p => new PreguntaDto{
+                            IdPregunta = p.IdPregunta
+                        })]
                     })]
                };
     }
@@ -79,6 +90,7 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
     {
         Seccion? section = await _context.Secciones
             .Include(s => s.Videos)
+            .Include(s => s.Evaluaciones) 
             .Where(s => s.IdSeccion == sectionId)
             .FirstOrDefaultAsync();
 
@@ -96,7 +108,12 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
                 Nombre = v.Nombre,
                 IdSeccion = v.IdSeccion,
                 Referencia = v.Referencia,
-                Duracion = v.Duracion
+                Duracion = v.Duracion,
+                Orden = v.Orden
+            })],
+            Evaluaciones = [.. section.Evaluaciones.Select(e => new EvaluacionDto{
+                IdEvaluacion = e.IdEvaluacion,
+                IdSeccion = e.IdSeccion,
             })]
         };
     }
@@ -136,7 +153,8 @@ public class SectionsController(CapacitacionesPruebasContext context) : Controll
                 Nombre = v.Nombre,
                 IdSeccion = v.IdSeccion,
                 Referencia = v.Referencia,
-                Duracion = v.Duracion
+                Duracion = v.Duracion,
+                Orden = v.Orden
             })]
         };
 
