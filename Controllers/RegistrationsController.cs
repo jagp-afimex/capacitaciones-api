@@ -72,16 +72,20 @@ public class RegistrationsController : ControllerBase
     [HttpGet(Name = "registrations/")]
     public async Task<IEnumerable<InscripcionDto>> Registrations()
     {
-        List<Inscripcion> registrations = await _context.Inscripciones.ToListAsync();
+        // List<Inscripcion> registrations = await _context.Inscripciones.ToListAsync();
 
-        return from registration in registrations
-               select new InscripcionDto()
-               {
-                   IdInscripcion = registration.IdInscripcion,
-                   KEmpleado = registration.KEmpleado,
-                   IdCurso = registration.IdCurso,
-                   Calificacion = registration.Calificacion
-               };
+        // return from registration in registrations
+        //        select new InscripcionDto()
+        //        {
+        //            IdInscripcion = registration.IdInscripcion,
+        //            KEmpleado = registration.KEmpleado,
+        //            IdCurso = registration.IdCurso,
+        //            Calificacion = registration.Calificacion
+        //        };
+
+        List<InscripcionDto> registrations = (List<InscripcionDto>)await _inscripcionRepository.Inscripciones();
+
+        return registrations;
     }
 
     [HttpGet("{registrationId}", Name = "registrations/{registrationId}")]
@@ -157,7 +161,11 @@ public class RegistrationsController : ControllerBase
         if (storedRegistration is null)
             return NotFound();
 
-        Curso? course = await _context.Cursos.FindAsync(registration.IdCurso);
+        Curso? course = await _context.Cursos
+        .Include(c => c.Secciones)
+            .ThenInclude(seccion => seccion.Evaluaciones)
+        .Where(c => c.IdCurso == registration.IdCurso)
+        .FirstOrDefaultAsync();
 
         if (course is null)
             return BadRequest();
@@ -165,19 +173,49 @@ public class RegistrationsController : ControllerBase
         if (registration.KEmpleado != storedRegistration.KEmpleado)
             return BadRequest();
 
+        List<int> evaluationsIds = [];
+
+        foreach (Seccion section in course.Secciones)
+        {
+            evaluationsIds.AddRange([.. section.Evaluaciones.Select(e => e.IdEvaluacion)]);
+        }
+
+        List<EvaluacionRevisada> revisadas = await _context.EvaluacionesRevisadas
+            .Where(e => e.KEmpleado == registration.KEmpleado)
+            .ToListAsync();
+
+        revisadas = [.. revisadas.Where(r => evaluationsIds.Contains(r.IdEvaluacion))];
+
+        var gruposPorEvaluacion = revisadas.GroupBy(r => r.IdEvaluacion);
+
+        var calificacionMaximaPorEvaluacion = gruposPorEvaluacion.Select(grupo => new
+        {
+            IdEvaluacion = grupo.Key,
+            CalificacionMaxima = grupo.Max(e => e.Calificacion)
+        });
+
+        decimal sumCalificaciones = 0;
+        decimal promedio = 0;
+        int totalEvaluaciones = 0;
+
+        foreach (var item in calificacionMaximaPorEvaluacion)
+        {
+            sumCalificaciones += item.CalificacionMaxima;
+            totalEvaluaciones++;
+        }
+
+        if (totalEvaluaciones > 0)
+            promedio = sumCalificaciones / totalEvaluaciones;
+
+        storedRegistration.Calificacion = promedio;
         storedRegistration.IdCurso = course.IdCurso;
-        storedRegistration.Calificacion = registration.Calificacion;
 
         _context.Update(storedRegistration);
         await _context.SaveChangesAsync();
 
-        InscripcionDto updatedRegistration = new()
-        {
-            IdCurso = storedRegistration.IdCurso,
-            IdInscripcion = storedRegistration.IdInscripcion,
-            KEmpleado = storedRegistration.KEmpleado,
-            Calificacion = storedRegistration.Calificacion
-        };
+        List<InscripcionDto> employeeRegistrations = (List<InscripcionDto>)await _inscripcionRepository.InscripcionesPorEmpleado((int)storedRegistration.KEmpleado);
+
+        InscripcionDto updatedRegistration = employeeRegistrations.First(r => r.IdCurso == course.IdCurso);
 
         return CreatedAtAction(nameof(RegistrationById), new { registrationId = storedRegistration.IdInscripcion }, updatedRegistration);
 

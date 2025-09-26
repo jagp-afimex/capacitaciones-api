@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using capacitaciones_api.Models;
 
@@ -11,9 +12,11 @@ using capacitaciones_api.Models;
 namespace capacitaciones_api.Migrations
 {
     [DbContext(typeof(CapacitacionesPruebasContext))]
-    partial class CapacitacionesPruebasContextModelSnapshot : ModelSnapshot
+    [Migration("20250923213420_EvaluacionesRevisadas entity")]
+    partial class EvaluacionesRevisadasentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,36 +200,6 @@ namespace capacitaciones_api.Migrations
                     b.HasIndex("IdSeccion");
 
                     b.ToTable("Evaluaciones");
-                });
-
-            modelBuilder.Entity("capacitaciones_api.Models.EvaluacionRevisada", b =>
-                {
-                    b.Property<int>("IdRevision")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRevision"));
-
-                    b.Property<decimal>("Calificacion")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IdEvaluacion")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdEvaluacionNavigationIdEvaluacion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("KEmpleado")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdRevision");
-
-                    b.HasIndex("IdEvaluacionNavigationIdEvaluacion");
-
-                    b.ToTable("EvaluacionesRevisadas");
                 });
 
             modelBuilder.Entity("capacitaciones_api.Models.Inscripcion", b =>
@@ -575,15 +548,6 @@ namespace capacitaciones_api.Migrations
                         .HasConstraintName("FK_Evaluacion_Seccion");
 
                     b.Navigation("IdSeccionNavigation");
-                });
-
-            modelBuilder.Entity("capacitaciones_api.Models.EvaluacionRevisada", b =>
-                {
-                    b.HasOne("capacitaciones_api.Models.Evaluacion", "IdEvaluacionNavigation")
-                        .WithMany()
-                        .HasForeignKey("IdEvaluacionNavigationIdEvaluacion");
-
-                    b.Navigation("IdEvaluacionNavigation");
                 });
 
             modelBuilder.Entity("capacitaciones_api.Models.Inscripcion", b =>

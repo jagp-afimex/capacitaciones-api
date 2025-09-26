@@ -24,6 +24,7 @@ public partial class Video
 
     public virtual Seccion? IdSeccionNavigation { get; set; }
 
+    [JsonPropertyName("order")]
     public int? Orden { get; set; }
 }
 

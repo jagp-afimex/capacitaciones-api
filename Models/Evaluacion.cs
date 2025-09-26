@@ -16,6 +16,8 @@ public partial class Evaluacion
 
     [JsonPropertyName("questions")]
     public virtual ICollection<Pregunta> Pregunta { get; set; } = new List<Pregunta>();
+
+    public ICollection<EvaluacionRevisada> EvaluacionesRevisadas = new List<EvaluacionRevisada>();
 }
 
 public class EvaluacionDto

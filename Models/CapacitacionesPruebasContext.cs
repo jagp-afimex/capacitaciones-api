@@ -39,6 +39,8 @@ public partial class CapacitacionesPruebasContext : DbContext
 
     public virtual DbSet<Video> Videos { get; set; }
 
+    public virtual DbSet<EvaluacionRevisada> EvaluacionesRevisadas { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AvancesCurso>(entity =>

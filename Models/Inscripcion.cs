@@ -63,12 +63,18 @@ public class InscripcionRepository
         _connectionString = configuration.GetConnectionString("CapacitacionesPruebas");
     }
 
-    public async Task<ICollection<InscripcionDto>?> Inscripciones(int idCurso)
+    public async Task<ICollection<InscripcionDto>?> Inscripciones(int idCurso = 0)
     {
         using DbConnection connection = new SqlConnection(_connectionString);
 
         if (connection.State == ConnectionState.Closed)
             await connection.OpenAsync();
+
+        if (idCurso == 0)
+        {
+            var registrations = await connection.QueryAsync<InscripcionDto>("Sl_Inscripciones", null, null, 380, CommandType.StoredProcedure);
+            return registrations.AsList();
+        }
 
         DynamicParameters parameters = new();
         parameters.Add("@idCurso", idCurso);
