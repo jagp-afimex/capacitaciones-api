@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using capacitaciones_api.Models;
 
@@ -11,9 +12,11 @@ using capacitaciones_api.Models;
 namespace capacitaciones_api.Migrations
 {
     [DbContext(typeof(CapacitacionesPruebasContext))]
-    partial class CapacitacionesPruebasContextModelSnapshot : ModelSnapshot
+    [Migration("20250929230356_add RespuestasPreguntasOpciones")]
+    partial class addRespuestasPreguntasOpciones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -432,37 +435,6 @@ namespace capacitaciones_api.Migrations
                     b.HasAnnotation("Relational:JsonPropertyName", "answers");
                 });
 
-            modelBuilder.Entity("capacitaciones_api.Models.RespuestasPreguntaOpcion", b =>
-                {
-                    b.Property<int>("IdRespuesta")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "answerId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRespuesta"));
-
-                    b.Property<int?>("IdEvaluacionRevisadaNavigationIdRevision")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdOpcionElegida")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "optionId");
-
-                    b.Property<int>("IdPregunta")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "questionId");
-
-                    b.Property<int>("IdRevision")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "checkId");
-
-                    b.HasKey("IdRespuesta");
-
-                    b.HasIndex("IdEvaluacionRevisadaNavigationIdRevision");
-
-                    b.ToTable("RespuestasPreguntaOpcion");
-                });
-
             modelBuilder.Entity("capacitaciones_api.Models.Seccion", b =>
                 {
                     b.Property<int>("IdSeccion")
@@ -701,15 +673,6 @@ namespace capacitaciones_api.Migrations
                         .HasConstraintName("FK_RespuestasPregunta_Pregunta");
 
                     b.Navigation("IdPreguntaNavigation");
-                });
-
-            modelBuilder.Entity("capacitaciones_api.Models.RespuestasPreguntaOpcion", b =>
-                {
-                    b.HasOne("capacitaciones_api.Models.EvaluacionRevisada", "IdEvaluacionRevisadaNavigation")
-                        .WithMany()
-                        .HasForeignKey("IdEvaluacionRevisadaNavigationIdRevision");
-
-                    b.Navigation("IdEvaluacionRevisadaNavigation");
                 });
 
             modelBuilder.Entity("capacitaciones_api.Models.Seccion", b =>

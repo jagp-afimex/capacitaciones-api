@@ -295,13 +295,33 @@ public class EvaluationsController(CapacitacionesPruebasContext context) : Contr
             Calificacion = finalScore
         };
 
+        await _context.EvaluacionesRevisadas.AddAsync(revisada);
+
+        await _context.SaveChangesAsync();
+        
         foreach (Pregunta pregunta in evaluation.IdEvaluacionNavigation.Pregunta.Where(p => p.IdTipoPregunta == 1))
         {
             foreach (RespuestasPregunta respuesta in pregunta.RespuestasPregunta)
+            {
+                respuesta.IdRevision = revisada.IdRevision;
                 await _context.RespuestasPreguntas.AddAsync(respuesta);
+            }
         }
 
-        await _context.EvaluacionesRevisadas.AddAsync(revisada);
+        foreach (Pregunta preguntaOpcion in evaluation.IdEvaluacionNavigation.Pregunta.Where(p => p.IdTipoPregunta == 2))
+        {
+            OpcionesPregunta opcion = preguntaOpcion.OpcionesPregunta.First(o => o.EsRespuesta == true);
+
+            RespuestasPreguntaOpcion respuestas = new()
+            {
+                IdPregunta = preguntaOpcion.IdPregunta,
+                IdOpcionElegida = opcion.IdOpcion,
+                IdRevision = revisada.IdRevision
+            };
+
+            await _context.RespuestasPreguntaOpcion.AddAsync(respuestas);
+
+        }
 
         await _context.SaveChangesAsync();
 

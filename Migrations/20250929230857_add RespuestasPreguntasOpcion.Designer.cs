@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using capacitaciones_api.Models;
 
@@ -11,9 +12,11 @@ using capacitaciones_api.Models;
 namespace capacitaciones_api.Migrations
 {
     [DbContext(typeof(CapacitacionesPruebasContext))]
-    partial class CapacitacionesPruebasContextModelSnapshot : ModelSnapshot
+    [Migration("20250929230857_add RespuestasPreguntasOpcion")]
+    partial class addRespuestasPreguntasOpcion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

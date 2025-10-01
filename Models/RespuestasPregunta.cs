@@ -19,6 +19,8 @@ public partial class RespuestasPregunta
     public int? IdPregunta { get; set; }
 
     public virtual Pregunta? IdPreguntaNavigation { get; set; }
+
+    public int? IdRevision { get; set; }
 }
 
 public class RespuestasPreguntaDto

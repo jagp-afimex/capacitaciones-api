@@ -8,7 +8,7 @@ public class Usuario
     public int IdUsuario { get; set; }
     [JsonPropertyName("employeeId")]
     public int IdEmpleado { get; set; }
-    [JsonPropertyName("Name")]
+    [JsonPropertyName("name")]
     public string? Empleado { get; set; }
     [JsonPropertyName("positionId")]
     public int IdPuesto { get; set; }

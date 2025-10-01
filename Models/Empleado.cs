@@ -15,6 +15,8 @@ public class Empleado
     public string Nombre { get; set; }
     [JsonPropertyName("officeId")]
     public int IdOficina { get; set; }
+    [JsonPropertyName("zone")]
+    public string Region { get; set; }
     [JsonPropertyName("officeName")]
     public string Oficina { get; set; }
     [JsonPropertyName("positionId")]
@@ -58,6 +60,6 @@ public class EmpleadoRepository
         DynamicParameters parameters = new();
         parameters.Add("@idEmpleado", employeeId);
 
-        return await connection.QueryFirstAsync<Empleado>("Empleados", parameters, null, 180, CommandType.StoredProcedure);
+        return await connection.QueryFirstOrDefaultAsync<Empleado>("Empleados", parameters, null, 180, CommandType.StoredProcedure);
     }
 }

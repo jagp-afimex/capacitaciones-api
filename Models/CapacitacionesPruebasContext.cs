@@ -41,6 +41,10 @@ public partial class CapacitacionesPruebasContext : DbContext
 
     public virtual DbSet<EvaluacionRevisada> EvaluacionesRevisadas { get; set; }
 
+    public virtual DbSet<EmpleadoRegistrado> EmpleadosRegistrados { get; set; }
+
+    public virtual DbSet<RespuestasPreguntaOpcion> RespuestasPreguntaOpcion { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AvancesCurso>(entity =>

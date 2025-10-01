@@ -19,8 +19,8 @@ public class UsersController(CapacitacionesPruebasContext context) : ControllerB
         if (user is null)
             return NotFound();
 
-        user.Token = "sdlkñsdkfsdñfjsdi565";
-        user.IdTipoUsuario = 3;
+        user.Token = "";
+        // user.IdTipoUsuario = 3;
         return user;
     }
 }
