@@ -5,17 +5,16 @@ namespace capacitaciones_api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UsersController(CapacitacionesPruebasContext context, CredencialRepository credencialRepository) : ControllerBase
+public class UsersController(SessionRepository sessionRepository, CredencialRepository credencialRepository) : ControllerBase
 {
-    readonly CapacitacionesPruebasContext _context = context;
+    readonly SessionRepository _sessionRepository = sessionRepository;
     readonly CredencialRepository _credencialRepository = credencialRepository;
 
     [Route("login/")]
     [HttpPost]
     public async Task<ActionResult<Usuario>> Session(Session session)
     {
-        Session session1 = new(_context);
-        Usuario? user = await session1.Informacion(session);
+        Usuario? user = await _sessionRepository.Informacion(session);
 
         if (user is null)
             return NotFound();

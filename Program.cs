@@ -17,6 +17,7 @@ builder.Services.AddScoped<PuestoRepository>();
 builder.Services.AddScoped<EmpleadoRepository>();
 builder.Services.AddScoped<DepartamentoRepository>();
 builder.Services.AddScoped<CredencialRepository>();
+builder.Services.AddScoped<SessionRepository>();
 
 var app = builder.Build();
 

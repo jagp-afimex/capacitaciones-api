@@ -2,6 +2,7 @@ using System.Data;
 using System.Data.Common;
 using System.Text.Json.Serialization;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace capacitaciones_api.Models;
@@ -12,17 +13,21 @@ public class Session()
     public string? Usuario { get; set; }
     [JsonPropertyName("Password")]
     public string? Contrasena { get; set; }
+    
+}
 
-    private readonly CapacitacionesPruebasContext _context;
+public class SessionRepository
+{
+    private readonly string _connectionString;
 
-    public Session(CapacitacionesPruebasContext context) : this()
+    public SessionRepository(IConfiguration configuration)
     {
-        _context = context;
+        _connectionString = configuration.GetConnectionString("CapacitacionesPruebas");
     }
 
     public async Task<Usuario?> Informacion(Session session)
     {
-        using DbConnection connection = _context.Database.GetDbConnection();
+        using DbConnection connection = new SqlConnection(_connectionString);
 
         if (connection.State == ConnectionState.Closed)
             await connection.OpenAsync();
@@ -30,6 +35,9 @@ public class Session()
         DynamicParameters parameters = new();
         parameters.Add("@Usuario", session.Usuario);
         parameters.Add("@Contrasena", session.Contrasena);
-        return await connection.QueryFirstOrDefaultAsync<Usuario>("SesionUsuario", parameters, commandTimeout: 120, commandType: CommandType.StoredProcedure);
+
+        Usuario? user = await connection.QueryFirstOrDefaultAsync<Usuario>("SesionUsuario", parameters, commandTimeout: 120, commandType: CommandType.StoredProcedure);
+
+        return user;
     }
 }
